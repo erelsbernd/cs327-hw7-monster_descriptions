@@ -1,0 +1,27 @@
+//
+//  MonsterFactory.hpp
+//  hw7-monster_descriptions
+//
+//  Created by Erin Elsbernd on 11/1/16.
+//  Copyright © 2016 Erin Elsbernd. All rights reserved.
+//
+
+#ifndef MonsterFactory_hpp
+#define MonsterFactory_hpp
+
+#include <stdio.h>
+
+#include <vector>
+#include "MonsterType.hpp"
+
+using namespace std;
+
+class MonsterFactory {
+  
+public:
+  vector<MonsterType> monsterList;
+  
+  
+};
+
+#endif /* MonsterFactory_hpp */
