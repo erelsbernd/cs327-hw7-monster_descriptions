@@ -48,11 +48,7 @@ typedef struct room {
   uint32_t connected;
 } room_t;
 
-#ifdef __cplusplus
 class pc;
-#else
-typedef void pc;
-#endif
 
 typedef struct dungeon {
   uint32_t num_rooms;

@@ -271,7 +271,7 @@ static int create_cycle(dungeon_t *d)
   /* Find the (approximately) farthest two rooms, then connect *
    * them by the shortest path using inverted hardnesses.      */
 
-  int32_t max, tmp, i, j, p, q;
+  int32_t max=0, tmp=0, i=0, j=0, p=0, q=0;
   pair_t e1, e2;
 
   for (i = max = 0; i < d->num_rooms - 1; i++) {
@@ -336,9 +336,9 @@ typedef struct queue_node {
 
 static int smooth_hardness(dungeon_t *d)
 {
-  int32_t i, x, y;
-  int32_t s, t, p, q;
-  queue_node_t *head, *tail, *tmp;
+  int32_t i=0, x=0, y=0;
+  int32_t s=0, t=0, p=0, q=0;
+  queue_node_t *head=NULL, *tail=NULL, *tmp=NULL;
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];
 
 #ifdef DUMP_HARDNESS_IMAGES
@@ -846,7 +846,7 @@ int read_dungeon(dungeon_t *d, char *file)
     exit(-1);
   }
   read_dungeon_map(d, f);
-  d->num_rooms = calculate_num_rooms(buf.st_size);
+  d->num_rooms = calculate_num_rooms((uint32_t)buf.st_size);
   d->rooms = (room_t*) malloc(sizeof (*d->rooms) * d->num_rooms);
   read_rooms(d, f);
 

@@ -45,8 +45,8 @@ void move_character(dungeon_t *d, character *c, pair_t next)
 void do_moves(dungeon_t *d)
 {
   pair_t next;
-  character *c;
-  event_t *e;
+  character *c = NULL;
+  event_t *e = NULL;
 
   /* Remove the PC when it is PC turn.  Replace on next call.  This allows *
    * use to completely uninit the heap when generating a new level without *

@@ -5,7 +5,6 @@
 
 # include "dims.h"
 
-# ifdef __cplusplus
 class character {
  public:
   char symbol;
@@ -14,11 +13,6 @@ class character {
   uint32_t alive;
   uint32_t sequence_number;
 };
-
-extern "C" {
-# else
-typedef void character;
-#endif
 
 typedef struct dungeon dungeon_t;
 
@@ -39,7 +33,5 @@ void character_reset_turn(character *c);
 char character_get_symbol(const character *c);
 uint32_t character_get_speed(const character *c);
 
-# ifdef __cplusplus
-}
-# endif
+
 #endif

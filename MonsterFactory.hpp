@@ -10,7 +10,7 @@
 #define MonsterFactory_hpp
 
 #include <stdio.h>
-
+#include <unistd.h>
 #include <vector>
 #include "MonsterType.hpp"
 
@@ -21,7 +21,14 @@ class MonsterFactory {
 public:
   vector<MonsterType> monsterList;
   
+  void readInMonsterDescriptionsFile(string filePath);
+  string getNextLine(istream& in);
+  string getNextWord(istream& in);
+  string getString(istream & in, char delim);
+  
   
 };
+
+
 
 #endif /* MonsterFactory_hpp */

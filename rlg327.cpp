@@ -8,6 +8,7 @@
 #include "npc.h"
 #include "move.h"
 #include "io.h"
+#include "MonsterFactory.hpp"
 
 const char *victory =
   "\n                                       o\n"
@@ -74,14 +75,22 @@ void usage(char *name)
 
 int main(int argc, char *argv[])
 {
+  MonsterFactory factory;
+  std::string filename.append("./monster_desc.txt");
+  factory.readInMonsterDescriptionsFile(filename);
+  return 0;
+}
+
+int fake_main(int argc, char *argv[])
+{
   dungeon_t d;
-  time_t seed;
+  time_t seed = 0;
   struct timeval tv;
-  uint32_t i;
-  uint32_t do_load, do_save, do_seed, do_image, do_place_pc;
-  uint32_t long_arg;
-  char *save_file;
-  char *pgm_file;
+  uint32_t i=0;
+  uint32_t do_load=0, do_save=0, do_seed=0, do_image=0, do_place_pc=0;
+  uint32_t long_arg=0;
+  char *save_file = NULL;
+  char *pgm_file = NULL;
 
   memset(&d, 0, sizeof (d));
 
@@ -196,7 +205,7 @@ int main(int argc, char *argv[])
   }
 
   printf("Seed is %ld.\n", seed);
-  srand(seed);
+  srand((unsigned int)seed);
 
   io_init_terminal();
   init_dungeon(&d);
