@@ -14,6 +14,12 @@
 
 using namespace std;
 
+struct dice {
+  uint32_t base_value;
+  uint32_t num_dice;
+  uint32_t num_sides;
+};
+
 class MonsterType {
   
 public:
@@ -46,9 +52,7 @@ public:
   
   /** A numerical value (dice, as defined above) describing the speed of
    a monster, followed by a newline */
-  uint32_t base_value;
-  uint32_t num_dice;
-  uint32_t num_sides;
+  dice speed;
   
   /** List of space-delineated abilities keywords. For now, we’ve got:
    SMART:   smart monsters (remember where player is)
@@ -63,11 +67,11 @@ public:
   
   /** A numerical value describing the amount of damage a monster can
    take, followed by a newline. */
-  uint32_t hitpoints;
+  dice hitpoints;
   
   /** A numerical value describing the amount of damage a monster can
    inflict per attack, followed by a newline. */
-  int32_t attackdamage;
+  dice attackdamage;
   
   
 };
