@@ -27,7 +27,7 @@ typedef struct corridor_path {
 
 static uint32_t in_room(dungeon_t *d, uint16_t y, uint16_t x)
 {
-  int i;
+  uint32_t i;
 
   for (i = 0; i < d->num_rooms; i++) {
     if ((x >= d->rooms[i].position[dim_x]) &&
@@ -87,7 +87,7 @@ static void dijkstra_corridor(dungeon_t *d, pair_t from, pair_t to)
 
     if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
       for (x = to[dim_x], y = to[dim_y];
-           (x != from[dim_x]) || (y != from[dim_y]);
+           (x != (uint32_t)from[dim_x]) || (y != (uint32_t)from[dim_y]);
            p = &path[y][x], x = p->from[dim_x], y = p->from[dim_y]) {
         if (mapxy(x, y) != ter_floor_room) {
           mapxy(x, y) = ter_floor_hall;
@@ -184,9 +184,10 @@ static void dijkstra_corridor_inv(dungeon_t *d, pair_t from, pair_t to)
   while ((p = (corridor_path_t*)heap_remove_min(&h))) {
     p->hn = NULL;
 
-    if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
+    if ((p->pos[dim_y] == (uint32_t)to[dim_y])
+        && p->pos[dim_x] == (uint32_t)to[dim_x]) {
       for (x = to[dim_x], y = to[dim_y];
-           (x != from[dim_x]) || (y != from[dim_y]);
+           (x != (uint32_t)from[dim_x]) || (y != (uint32_t)from[dim_y]);
            p = &path[y][x], x = p->from[dim_x], y = p->from[dim_y]) {
         if (mapxy(x, y) != ter_floor_room) {
           mapxy(x, y) = ter_floor_hall;
