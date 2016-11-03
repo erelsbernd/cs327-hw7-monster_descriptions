@@ -1,11 +1,3 @@
-//
-//  MonsterType.cpp
-//  hw7-monster_descriptions
-//
-//  Created by Erin Elsbernd on 11/1/16.
-//  Copyright © 2016 Erin Elsbernd. All rights reserved.
-//
-
 #include <iostream>
 #include <ncurses.h>
 
@@ -47,15 +39,6 @@ void printColors(bool c[NUM_COLORS]) {
   if (c[ COLOR_WHITE  ]){ cout << "WHITE "  ;}
   cout << "\n";
   
-  
-#define COLOR_BLACK	  0
-#define COLOR_RED	    1
-#define COLOR_GREEN	  2
-#define COLOR_YELLOW  3
-#define COLOR_BLUE    4
-#define COLOR_MAGENTA 5
-#define COLOR_CYAN    6
-#define COLOR_WHITE   7
 }
 
 void MonsterType::printMonsterType() {
