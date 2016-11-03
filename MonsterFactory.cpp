@@ -79,26 +79,64 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
   string word;
   
   string line = getNextLine(f);
-  //line = getNextLine(f);
   if (line.compare("RLG327 MONSTER DESCRIPTION 1") != 0) {
     cout << "first line did not match description";
     return 1;
   }
   
-  
-  line = getNextLine(f);
-  linenum += 2;
+  line = getNextLine(f); linenum += 1;
   
   /* go through each line of the file and parse */
-  while(line.size() > 0) {
+  while(!f.eof()) {
     cout << "R" << linenum << " " << line << "\n";
-    if (linenum == 2) {
-      if (line.compare("") != 0) {
-        cout << "second line wasn't blank\n";
+    
+    /* checking for blank line */
+    if (line.compare("") != 0) {
+      cout << "next line wasn't blank!\n";
+      return 1;
+    } else {
+      
+      line = getNextLine(f); linenum += 1;
+    
+      /* checking for BEGIN MONSTER */
+      if (line.compare("BEGIN MONSTER") != 0) {
+        cout << "third line wasn't correct\n";
         return 1;
       }
-      
-    }
+      else {
+        MonsterType *m = new MonsterType();
+        
+        word = getNextWord(f);
+        
+        while (word.compare("END") != 0) {
+          
+          /* NAME keyword */
+          if (word.compare("NAME") == 0) {
+            line = getNextLine(f); cout << line << "\n";
+            m->name = line;
+            
+            cout << "name= " << m->name << "\n";
+          }
+          /* SYMB keyword */
+          else if (word.compare("SYMB") == 0) {
+            line = getNextLine(f); cout << line << "\n";
+            if (line.size() != 1) {
+              cout << "SYMBOL is wrong size!\n";
+              return 1;
+            }
+            m->symbol = line[0];
+            
+            cout << "symbol= " << m->symbol << "\n";
+          } else {
+            cout << "bad keyword!\n";
+            return 1;
+          }
+          
+          word = getNextWord(f);
+        } // "END" while
+      } // "BEGIN MONSTER" else
+    } //blank line check
+    
     line = getNextLine(f);
     linenum++;
     
