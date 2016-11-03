@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
   */
   //cout << "file=" << filename << "\n";
   
-  FILE *f;
   char *home;
   size_t len;
   char *filename;
@@ -117,7 +116,7 @@ int main(int argc, char *argv[])
     return 1;
   }
   
-  int i = 0;
+  uint32_t i = 0;
   for (i = 0; i < factory.monsterList.size(); i++)
   {
     factory.monsterList[i].printMonsterType();
