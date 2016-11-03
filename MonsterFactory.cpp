@@ -13,6 +13,9 @@
 #define MONSTER_DESC_SEMANTIC   "RLG327"
 #define MONSTER_DESC_VERSION    1
 
+//#define errorout cout
+//#define debugout //cout
+
 using namespace std;
 
 /* splits a string into tokens */
@@ -57,17 +60,16 @@ void read_in_dice(dice &d, string &s) {
   d.num_sides = atoi( num.c_str() );
   //cout << "sides = " << m->speed.num_sides << "\n";
   
-  cout << "dice = base " << d.base_value << " plus "
+  /*cout << "dice = base " << d.base_value << " plus "
                     << d.num_dice   << " dice with "
-                    << d.num_sides  << " sides\n";
+                    << d.num_sides  << " sides\n";*/
 }
 
 int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
   //try_f_read(filepath);
-  cout << "-- START FILE READ --\n";
+  //cout << "-- START FILE READ --\n";
   ifstream f(filepath);
   
-  int linenum = 0;
   deque<string> tokens;
   
   string line = getNextLine(f);
@@ -76,148 +78,163 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
     return 1;
   }
   
-  line = getNextLine(f); linenum += 1;
+  line = getNextLine(f);
   
   /* go through each line of the file and parse */
   while(!f.eof()) {
-    cout << "R" << linenum << " " << line << "\n";
+    //cout << "Read in: " << line << "\n";
     
     /* checking for blank line */
     if (line.compare("") != 0) {
       cout << "next line wasn't blank!\n";
       return 1;
-    } else {
-      
-      line = getNextLine(f); linenum += 1;
+    }
     
-      /* checking for BEGIN MONSTER */
-      if (line.compare("BEGIN MONSTER") != 0) {
-        cout << "third line wasn't correct\n";
-        return 1;
-      }
+    line = getNextLine(f);
+    
+    /* checking for BEGIN MONSTER */
+    if (line.compare("BEGIN MONSTER") != 0) {
+      cout << "third line wasn't correct\n";
+      return 1;
+    }
+    
+    MonsterType *m = new MonsterType();
+    
+    line = getNextLine(f);
+    tokens = split(line.c_str());
+    
+    string keyword = tokens.front();
+    tokens.pop_front(); //remove the front
+    
+    while (keyword.compare("END") != 0) {
       
-      MonsterType *m = new MonsterType();
-      
-      line = getNextLine(f);
-      tokens = split(line.c_str());
-      
-      string keyword = tokens.front();
-      tokens.pop_front(); //remove the front
-      
-      while (keyword.compare("END") != 0) {
+      /* NAME keyword */
+      if (keyword.compare("NAME") == 0) {
         
-        /* NAME keyword */
-        if (keyword.compare("NAME") == 0) {
-          
-          //makes name equal to front token and pops it off
-          m->name = tokens.front();
-          //pops off front of tokens
-          tokens.pop_front();
-          for (auto word : tokens) {
-            m->name += ' ' + word;
-          }
-          
-          cout << "Name = " << m->name << "\n";
+        //makes name equal to front token and pops it off
+        m->name = tokens.front();
+        //pops off front of tokens
+        tokens.pop_front();
+        for (auto word : tokens) {
+          m->name += ' ' + word;
         }
-        else if (keyword.compare("SYMB") == 0) {
-          //line = getNextLine(f);
-          if (tokens.size() != 1) {
-            cout << "symbol is wrong size!\n";
+        
+        //cout << "Name = " << m->name << "\n";
+      }
+      else if (keyword.compare("SYMB") == 0) {
+        //line = getNextLine(f);
+        if (tokens.size() != 1) {
+          cout << "symbol is wrong size!\n";
+          return 1;
+        }
+        m->symbol = tokens.front()[0];
+        
+        //cout << "Symbol = " << m->symbol << "\n";
+      }
+      else if (keyword.compare("COLOR") == 0){
+        //cout << "Colors";
+        for ( auto color : tokens) {
+          if      (color.compare("BLACK") == 0){ m->color[COLOR_BLACK] = true;}
+          else if (color.compare("RED")   == 0){ m->color[COLOR_RED]   = true;}
+          else if (color.compare("GREEN") == 0){ m->color[COLOR_GREEN] = true;}
+          else if (color.compare("YELLOW")== 0){ m->color[COLOR_YELLOW]= true;}
+          else if (color.compare("BLUE")  == 0){ m->color[COLOR_BLUE]  = true;}
+          else if (color.compare("MAGENTA")==0){ m->color[COLOR_MAGENTA]=true;}
+          else if (color.compare("CYAN")  == 0){ m->color[COLOR_CYAN]  = true;}
+          else if (color.compare("WHITE") == 0){ m->color[COLOR_WHITE] = true;}
+          else {
+            cout << "Bad color = " << color << "\n";
             return 1;
           }
-          m->symbol = tokens.front()[0];
-          
-          cout << "Symbol = " << m->symbol << "\n";
+          //cout << " ~ " << color << "\n";
         }
-        else if (keyword.compare("COLOR") == 0){
-          
-          cout << "Colors";
-          for ( auto color : tokens) {
-            if      (color.compare("BLACK") == 0){ m->color = COLOR_BLACK;  }
-            else if (color.compare("RED")   == 0){ m->color = COLOR_RED;    }
-            else if (color.compare("GREEN") == 0){ m->color = COLOR_GREEN;  }
-            else if (color.compare("YELLOW")== 0){ m->color = COLOR_YELLOW; }
-            else if (color.compare("BLUE")  == 0){ m->color = COLOR_BLUE;   }
-            else if (color.compare("MAGENTA")==0){ m->color = COLOR_MAGENTA;}
-            else if (color.compare("CYAN")  == 0){ m->color = COLOR_CYAN;   }
-            else if (color.compare("WHITE") == 0){ m->color = COLOR_WHITE;  }
-            else {
-              cout << "Bad color = " << color << "\n";
-              return 1;
-            }
-            cout << " ~ " << color << "\n";
+      }
+      else if (keyword.compare("DESC") == 0) {
+        line = getNextLine(f);
+        //cout << "Description:\n";
+        while (line.compare(".") != 0) {
+          if (line.size() > 77) {
+            cout << "line size greater than 77\n";
+            return 1;
           }
-        }
-        else if (keyword.compare("DESC") == 0) {
+          //cout << line << "\n";
+          m->description += line + "\n";
           line = getNextLine(f);
-          cout << "Description:\n";
-          while (line.compare(".") != 0) {
-            if (line.size() > 77) {
-              cout << "line size greater than 77\n";
-              return 1;
-            }
-            cout << line << "\n";
-            m->description += line + "\n";
-            line = getNextLine(f);
-          }
         }
-        else if (keyword.compare("SPEED") == 0) {
-          
-          if (tokens.size() != 1) {
-            cout << "speed is wrong size!\n";
-            return 1;
-          }
-          
-          cout << "Speed  ";
-          string speed = tokens.front();
-          read_in_dice(m->speed, speed);
-          
-        }
-        else if (keyword.compare("DAM") == 0) {
-          
-          if (tokens.size() != 1) {
-            cout << "damage is wrong size!\n";
-            return 1;
-          }
-          
-          cout << "Damage ";
-          string damage = tokens.front();
-          read_in_dice(m->attackdamage, damage);
-          
-        }
-        else if (keyword.compare("HP") == 0) {
-          
-          if (tokens.size() != 1) {
-            cout << "hitpoints is wrong size!\n";
-            return 1;
-          }
-          
-          cout << "Health ";
-          string hitpoints = tokens.front();
-          read_in_dice(m->hitpoints, hitpoints);
-          
-        }
-        else if (keyword.compare("ABIL") == 0){
-          
-        }
-        else {
-          cout << "bad keyword! = " << keyword << "\n" ;
+      }
+      else if (keyword.compare("SPEED") == 0) {
+        
+        if (tokens.size() != 1) {
+          cout << "speed is wrong size!\n";
           return 1;
         }
         
-        /* get next line */
-        line = getNextLine(f);
-        tokens = split(line.c_str());
-        keyword = tokens.front();
-        tokens.pop_front(); //remove the front
+        //cout << "Speed  ";
+        string speed = tokens.front();
+        read_in_dice(m->speed, speed);
         
-      } // while not "END"
-    } //blank line check
+      }
+      else if (keyword.compare("DAM") == 0) {
+        
+        if (tokens.size() != 1) {
+          cout << "damage is wrong size!\n";
+          return 1;
+        }
+        
+        //cout << "Damage ";
+        string damage = tokens.front();
+        read_in_dice(m->attackdamage, damage);
+        
+      }
+      else if (keyword.compare("HP") == 0) {
+        
+        if (tokens.size() != 1) {
+          cout << "hitpoints is wrong size!\n";
+          return 1;
+        }
+        
+        //cout << "Health ";
+        string hitpoints = tokens.front();
+        read_in_dice(m->hitpoints, hitpoints);
+        
+      }
+      else if (keyword.compare("ABIL") == 0){
+        
+        //cout << "Abilities";
+        for ( auto skill : tokens) {
+          if      (skill.compare("SMART")  == 0){ m->skillz[SMART]  = true;}
+          else if (skill.compare("TELE")   == 0){ m->skillz[TELE]   = true;}
+          else if (skill.compare("TUNNEL") == 0){ m->skillz[TUNNEL] = true;}
+          else if (skill.compare("ERRATIC")== 0){ m->skillz[ERRATIC]= true;}
+          else if (skill.compare("PASS")   == 0){ m->skillz[PASS]   = true;}
+          else {
+            cout << "Bad ability name = " << skill << "\n";
+            return 1;
+          }
+          //cout << " ~ " << skill;
+        }
+        //cout << "\n";
+      }
+      else {
+        cout << "bad keyword! = " << keyword << "\n" ;
+        return 1;
+      }
+      
+      /* get next line */
+      line = getNextLine(f);
+      tokens = split(line.c_str());
+      keyword = tokens.front();
+      tokens.pop_front(); //remove the front
+      
+      
+    } // while not "END"
     
+    this->monsterList.push_back(*m);
+  
     line = getNextLine(f);
-    linenum++;
-    
+  
   }
+
   return 0;
 }
 

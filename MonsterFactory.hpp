@@ -11,8 +11,8 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <list>
 #include <vector>
+#include <list>
 #include "MonsterType.hpp"
 
 using namespace std;
@@ -22,7 +22,10 @@ class MonsterFactory {
 public:
   vector<MonsterType> monsterList;
   
+  //MonsterType& createNewMonsterType();
+  
   int readInMonsterDescriptionsFile(char* filepath);
+  
   string getNextLine(istream& in);
   string getNextWord(istream& in);
   string getString(istream & in, char delim);

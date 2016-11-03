@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
   //char *save_file = NULL;
   char filename[] = "/Users/erelsbernd/Documents/IowaState/IowaStateFall2016/cs327/hw7-monster_descriptions/monster_desc.txt";
   
-  cout << "file=" << filename << "\n";
+  //cout << "file=" << filename << "\n";
   
   MonsterFactory factory;
   int factoryReturn = factory.readInMonsterDescriptionsFile(filename);
@@ -92,14 +92,19 @@ int main(int argc, char *argv[])
     std::cout << "Shit didn't work yo\n";
     return 1;
   }
-
-  std::cout << "Shit did work yo\n";
+  
+  int i = 0;
+  for (i = 0; i < factory.monsterList.size(); i++)
+  {
+    factory.monsterList[i].printMonsterType();
+    cout << "\n";
+  }
  
   
   return 0;
 }
 
-int fake_main(int argc, char *argv[])
+int ignore_main(int argc, char *argv[])
 {
   dungeon_t d;
   time_t seed = 0;
