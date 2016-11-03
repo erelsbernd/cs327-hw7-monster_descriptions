@@ -74,6 +74,9 @@ void usage(char *name)
   exit(-1);
 }
 
+#define MONSTER_DESC_SAVE_DIR   ".rlg327"
+#define MONSTER_DESC_SAVE_FILE  "monster_desc.txt"
+
 /* for testing */
 int main(int argc, char *argv[])
 {
@@ -82,8 +85,29 @@ int main(int argc, char *argv[])
   
   
   //char *save_file = NULL;
-  char filename[] = "/Users/erelsbernd/Documents/IowaState/IowaStateFall2016/cs327/hw7-monster_descriptions/monster_desc.txt";
+  /*char filename[] = "/Users/erelsbernd/Documents/IowaState/IowaStateFall2016/cs327/hw7-monster_descriptions/monster_desc.txt";
+  */
+  //cout << "file=" << filename << "\n";
   
+  FILE *f;
+  char *home;
+  size_t len;
+  char *filename;
+  
+  if (!(home = getenv("HOME"))) {
+    fprintf(stderr, "\"HOME\" is undefined.  Using working directory.\n");
+    home = (char*)calloc(2, sizeof(char));
+    home[0] = '.';
+    home[1] = '\0';
+  }
+  
+  len = (strlen(home) + strlen(SAVE_DIR) + strlen(DUNGEON_SAVE_FILE) +
+         1 /* The NULL terminator */                                 +
+         2 /* The slashes */);
+  
+  filename = (char*) malloc(len * sizeof (*filename));
+  sprintf(filename, "%s/%s/%s", home, MONSTER_DESC_SAVE_DIR,
+          MONSTER_DESC_SAVE_FILE);
   //cout << "file=" << filename << "\n";
   
   MonsterFactory factory;

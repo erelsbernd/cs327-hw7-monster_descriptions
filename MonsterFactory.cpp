@@ -8,12 +8,6 @@
 #include <ncurses.h>
 
 
-#define SAVE_DIR                ".rlg327"
-#define MONSTER_DESC_SAVE_FILE  "monster_desc.txt"
-#define MONSTER_DESC_SEMANTIC   "RLG327"
-#define MONSTER_DESC_VERSION    1
-
-
 using namespace std;
 
 /* splits a string into tokens */
