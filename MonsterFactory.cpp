@@ -4,6 +4,9 @@
 #include <fstream>
 #include <iostream>
 #include <deque>
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
 
 #include <ncurses.h>
 
@@ -138,7 +141,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
         m->name = tokens.front();
         //pops off front of tokens
         tokens.pop_front();
-        for (int i=0; i<tokens.size(); i++) { //auto word : tokens) {
+        for (uint32_t i=0; i<tokens.size(); i++) { //auto word : tokens) {
           string word = tokens[i];
           m->name += ' ' + word;
         }
@@ -179,7 +182,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
           keywords[COLOR] = true;
         }
         
-        for (int i=0; i < tokens.size(); i++) {
+        for (uint32_t i=0; i < tokens.size(); i++) {
           string color = tokens[i];
           if      (color.compare("BLACK")  == 0){ m->color[BLACK]   = true; }
           else if (color.compare("RED")    == 0){ m->color[RED]     = true; }
@@ -308,7 +311,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
         }
         
         //cout << "Abilities";
-        for (int i=0; i<tokens.size(); i++) { //auto skill : tokens) {
+        for (uint32_t i=0; i<tokens.size(); i++) { //auto skill : tokens) {
           string skill = tokens[i];
           if      (skill.compare("SMART")  == 0){ m->skillz[SMART]  = true;}
           else if (skill.compare("TELE")   == 0){ m->skillz[TELE]   = true;}

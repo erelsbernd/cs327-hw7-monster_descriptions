@@ -25,7 +25,7 @@ typedef struct corridor_path {
   int32_t cost;
 } corridor_path_t;
 
-static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
+static uint32_t in_room(dungeon_t *d, uint16_t y, uint16_t x)
 {
   int i;
 
@@ -271,7 +271,7 @@ static int create_cycle(dungeon_t *d)
   /* Find the (approximately) farthest two rooms, then connect *
    * them by the shortest path using inverted hardnesses.      */
 
-  int32_t max=0, tmp=0, i=0, j=0, p=0, q=0;
+  uint32_t max=0, tmp=0, i=0, j=0, p=0, q=0;
   pair_t e1, e2;
 
   for (i = max = 0; i < d->num_rooms - 1; i++) {
@@ -744,7 +744,7 @@ int read_dungeon_map(dungeon_t *d, FILE *f)
 int read_rooms(dungeon_t *d, FILE *f)
 {
   uint32_t i;
-  uint32_t x, y;
+  int32_t x, y;
   uint8_t p;
 
   for (i = 0; i < d->num_rooms; i++) {
