@@ -13,8 +13,6 @@
 #define MONSTER_DESC_SEMANTIC   "RLG327"
 #define MONSTER_DESC_VERSION    1
 
-//#define errorout cout
-//#define debugout //cout
 
 using namespace std;
 
@@ -70,6 +68,19 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
   //cout << "-- START FILE READ --\n";
   ifstream f(filepath);
   
+  /*
+   #define NAME  0
+   #define DESC  1
+   #define SYMB  2
+   #define COLOR 3
+   #define SPEED 4
+   #define ABIL  5
+   #define HP    6
+   #define DAM   7
+   #define NUM_KEYWORDS 8
+   */
+  bool keywords[NUM_KEYWORDS];
+  bool invalid_monster = false; //flag for bad input
   deque<string> tokens;
   
   string line = getNextLine(f);
@@ -80,6 +91,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
   
   line = getNextLine(f);
   
+  /* FILE READ IN */
   /* go through each line of the file and parse */
   while(!f.eof()) {
     //cout << "Read in: " << line << "\n";
@@ -98,6 +110,10 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       return 1;
     }
     
+    /* reset keywords seen */
+    for (int i = 0; i < NUM_KEYWORDS; i++)
+      keywords[i] = false;
+    
     MonsterType *m = new MonsterType();
     
     line = getNextLine(f);
@@ -106,10 +122,19 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
     string keyword = tokens.front();
     tokens.pop_front(); //remove the front
     
+    /* MONSTER READ IN */
     while (keyword.compare("END") != 0) {
       
-      /* NAME keyword */
       if (keyword.compare("NAME") == 0) {
+        
+        /* CHECK if KEYWORD already used */
+        if ( keywords[NAME] == true ) {
+          invalid_monster = true;
+          break;
+        }
+        else {
+          keywords[NAME] = true;
+        }
         
         //makes name equal to front token and pops it off
         m->name = tokens.front();
@@ -122,6 +147,15 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
         //cout << "Name = " << m->name << "\n";
       }
       else if (keyword.compare("SYMB") == 0) {
+        
+        if ( keywords[SYMB] == true ) {
+          invalid_monster = true;
+          break;
+        }
+        else {
+          keywords[SYMB] = true;
+        }
+        
         //line = getNextLine(f);
         if (tokens.size() != 1) {
           cout << "symbol is wrong size!\n";
@@ -133,17 +167,19 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       }
       else if (keyword.compare("COLOR") == 0){
         //cout << "Colors";
-        for ( auto color : tokens) {
-          if      (color.compare("BLACK") == 0){ m->color[COLOR_BLACK] = true;}
-          else if (color.compare("RED")   == 0){ m->color[COLOR_RED]   = true;}
-          else if (color.compare("GREEN") == 0){ m->color[COLOR_GREEN] = true;}
-          else if (color.compare("YELLOW")== 0){ m->color[COLOR_YELLOW]= true;}
-          else if (color.compare("BLUE")  == 0){ m->color[COLOR_BLUE]  = true;}
-          else if (color.compare("MAGENTA")==0){ m->color[COLOR_MAGENTA]=true;}
-          else if (color.compare("CYAN")  == 0){ m->color[COLOR_CYAN]  = true;}
-          else if (color.compare("WHITE") == 0){ m->color[COLOR_WHITE] = true;}
+        
+        for (int i=0; i < tokens.size(); i++) {
+          string color = tokens[i];
+          if      (color.compare("BLACK")  == 0){ m->color[BLACK]   = true; }
+          else if (color.compare("RED")    == 0){ m->color[RED]     = true; }
+          else if (color.compare("GREEN")  == 0){ m->color[GREEN]   = true; }
+          else if (color.compare("YELLOW") == 0){ m->color[YELLOW]  = true; }
+          else if (color.compare("BLUE")   == 0){ m->color[BLUE]    = true; }
+          else if (color.compare("MAGENTA")== 0){ m->color[MAGENTA] = true; }
+          else if (color.compare("CYAN")   == 0){ m->color[CYAN]    = true; }
+          else if (color.compare("WHITE")  == 0){ m->color[WHITE]   = true; }
           else {
-            cout << "Bad color = " << color << "\n";
+            cout << "Invalid Color = " << color << "\n";
             return 1;
           }
           //cout << " ~ " << color << "\n";
@@ -178,7 +214,8 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
         
         if (tokens.size() != 1) {
           cout << "damage is wrong size!\n";
-          return 1;
+          invalid_monster = true;
+          break; //go to next monster
         }
         
         //cout << "Damage ";
@@ -218,7 +255,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       else {
         cout << "bad keyword! = " << keyword << "\n" ;
         return 1;
-      }
+      } // END of keyword read block
       
       /* get next line */
       line = getNextLine(f);
@@ -227,13 +264,25 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       tokens.pop_front(); //remove the front
       
       
-    } // while not "END"
+    } // END of single MONSTER read in
     
-    this->monsterList.push_back(*m);
+    /* KEYWORDS CHECK */
+    for (int i = 0; i < NUM_KEYWORDS; i++) {
+      if (keywords[i] == false) invalid_monster = true;
+    }
+    
+    /* INVALID - throw away data and lines */
+    if (invalid_monster) {
+      while (line.size() > 0) //eat lines until next emptyline
+        line = getNextLine(f);
+    }
+    else {
+      this->monsterList.push_back(*m);
+      line = getNextLine(f);
+    }
   
-    line = getNextLine(f);
   
-  }
+  } // END of FILE READ IN
 
   return 0;
 }

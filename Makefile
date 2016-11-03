@@ -2,7 +2,7 @@ CXX = g++
 ECHO = echo
 RM = rm -f
 
-CXXFLAGS = -Wall -Werror -ggdb -funroll-loops
+CXXFLAGS = -Wall -ggdb -funroll-loops
 LDFLAGS = -lncurses
 
 BIN = rlg327
