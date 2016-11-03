@@ -2,12 +2,12 @@ CXX = g++
 ECHO = echo
 RM = rm -f
 
-CXXFLAGS = -Wall -Werror -ggdb -funroll-loops
+CXXFLAGS = -Wall -ggdb -funroll-loops
 LDFLAGS = -lncurses
 
 BIN = rlg327
 OBJS = rlg327.o dungeon.o heap.o utils.o path.o character.o pc.o npc.o \
-       move.o event.o io.o
+       move.o event.o io.o MonsterFactory.o MonsterType.o
 
 all: $(BIN) etags
 
