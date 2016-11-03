@@ -8,6 +8,16 @@
 
 using namespace std;
 
+#define NAME  0
+#define DESC  1
+#define SYMB  2
+#define COLOR 3
+#define SPEED 4
+#define ABIL  5
+#define HP    6
+#define DAM   7
+#define NUM_KEYWORDS 8
+
 #define SMART   0 //smart monsters (remember where player is)
 #define TELE    1 //telepathic monsters (always know where player is)
 #define TUNNEL  2 //can tunnel through rock (doesn't have to follow hallways)
@@ -15,6 +25,28 @@ using namespace std;
 #define PASS    4 //non-corporeal monsters, like ghosts, that can
                   //pass through matter without damaging it,
 #define NUM_SKILLZ 5
+
+#define BLACK	  0
+#define RED	    1
+#define GREEN	  2
+#define YELLOW   3
+#define BLUE     4
+#define MAGENTA  5
+#define CYAN     6
+#define WHITE    7
+#define NUM_COLORS 8
+
+/* //colors, from <ncurses.h>
+ #define COLOR_BLACK	  0
+ #define COLOR_RED	    1
+ #define COLOR_GREEN	  2
+ #define COLOR_YELLOW   3
+ #define COLOR_BLUE     4
+ #define COLOR_MAGENTA  5
+ #define COLOR_CYAN     6
+ #define COLOR_WHITE    7
+ */
+
 
 struct dice {
   uint32_t base_value;
@@ -44,7 +76,7 @@ public:
   /** A list of space-delineated color name keywords (see color information
    below), used to color the monster in the dungeon (not implemented
    yet, but curses makes this easy), followed by a newline. */
-  bool color[8];
+  bool color[NUM_COLORS];
 
 /* //colors
 #define COLOR_BLACK	  0
