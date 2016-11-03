@@ -412,10 +412,10 @@ static void io_list_monsters(dungeon_t *d)
   uint32_t x, y, count;
   pair_t from, to;
 
-  from[dim_y] = max(1, character_get_y(d->thepc) - PC_VISUAL_RANGE);
-  from[dim_x] = max(1, character_get_x(d->thepc) - PC_VISUAL_RANGE);
-  to[dim_y] = min(DUNGEON_Y - 1, character_get_y(d->thepc) + PC_VISUAL_RANGE);
-  to[dim_x] = min(DUNGEON_X - 1, character_get_x(d->thepc) + PC_VISUAL_RANGE);
+  from[dim_y] = max2(1, character_get_y(d->thepc) - PC_VISUAL_RANGE);
+  from[dim_x] = max2(1, character_get_x(d->thepc) - PC_VISUAL_RANGE);
+  to[dim_y] = min2(DUNGEON_Y - 1, character_get_y(d->thepc) + PC_VISUAL_RANGE);
+  to[dim_x] = min2(DUNGEON_X - 1, character_get_x(d->thepc) + PC_VISUAL_RANGE);
 
   c = (character**) malloc(d->num_monsters * sizeof (*c));
 
