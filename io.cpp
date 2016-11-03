@@ -420,8 +420,8 @@ static void io_list_monsters(dungeon_t *d)
   c = (character**) malloc(d->num_monsters * sizeof (*c));
 
   /* Get a linear list of monsters */
-  for (count = 0, y = from[dim_y]; y <= to[dim_y]; y++) {
-    for (x = from[dim_x]; x <= to[dim_x]; x++) {
+  for (count = 0, y = from[dim_y]; y <= (uint32_t)to[dim_y]; y++) {
+    for (x = from[dim_x]; x <= (uint32_t)to[dim_x]; x++) {
       if (d->charmap[y][x] && d->charmap[y][x] != d->thepc) {
         c[count++] = d->charmap[y][x];
       }
