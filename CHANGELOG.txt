@@ -1,0 +1,22 @@
+(2016-11-01) ADD: copied over hw-6 files
+(2016-11-01) ADD: added .gitignore, changelog, and readme
+(2016-11-01) ADD: changed all .c to .cpp
+(2016-11-01) DEBUG: fixed compilation errors with change to c++
+(2016-11-01) DEBUG: fixed max/min error by adding #include <list>
+(2016-11-01) ADD: started MonsterType class
+(2016-11-01) ADD: added variables to MonsterType, i.e. name, color, desc etc.
+(2016-11-01) ADD: started MonsterFactory class
+(2016-11-01) ADD: began readInMonsterDescriptionsFile()
+(2016-11-01) ADD: added methods getNextLine(), getNextWord()
+(2016-11-01) BUG: fixed file path error
+(2016-11-02) ADD: read in name
+(2016-11-02) ADD: read in symbol
+(2016-11-02) BUG: fixed updating next line
+(2016-11-02) ADD: reading in colors
+(2016-11-02) ADD: use tokens to read in multiple colors
+(2016-11-02) BUG: fixed token bits updating
+(2016-11-02) ADD: read in dice
+(2016-11-02) BUG: using tokens method to read in dice
+(2016-11-02) ADD: using dice methods to read in hp and health
+(2016-11-02) ADD: reading in abilities
+(2016-11-02) BUG: fixed so things would print out from MonsterType class

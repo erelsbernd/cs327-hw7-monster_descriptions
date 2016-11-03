@@ -1,0 +1,9 @@
+I started by changing all the .c files to .cpp files and fixing the compilation errors. I then 
+made a MonsterType class that stored the variables of the different monster attributes:
+description, name, color, etc. MonsterFactory class was created to do most of the heavy lifting
+for reading in the file and parsing the monster attributes. Parsing the file was done by creating
+and utilizing separate methods like getNextLine(), getNextWord(), read_in_dice(), and split().
+These were called within an overarching while loop in readInMonsterDescriptionsFile(). I used if
+else statements and additional while and for loops to check for blank lines, good/bad keywords and
+to go through multiple values of an attribute. The MonsterClass method was called from main to
+print out the monster descriptions. Overall I think I successfully complete this assignment.   
