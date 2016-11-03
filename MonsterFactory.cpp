@@ -96,39 +96,43 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
   while(!f.eof()) {
     //cout << "Read in: " << line << "\n";
     
-    /* checking for blank line */
+    /* CHECK for BLANK LINE */
     if (line.compare("") != 0) {
-      cout << "next line wasn't blank!\n";
+      cout << "BLANK LINE not seen before next monster! Aborting program.\n";
       return 1;
     }
     
-    line = getNextLine(f);
+    line = getNextLine(f); //get NEXT line to check
     
-    /* checking for BEGIN MONSTER */
+    /* CHECK for BEGIN MONSTER */
     if (line.compare("BEGIN MONSTER") != 0) {
-      cout << "third line wasn't correct\n";
-      return 1;
+      cout << "BEGIN MONSTER did not appear first. Discarding monster.\n\n";
+      invalid_monster = true;
+      break;
     }
     
-    /* reset keywords seen */
-    for (int i = 0; i < NUM_KEYWORDS; i++)
-      keywords[i] = false;
+    line = getNextLine(f); // get NEXT line to check
+    
+    /* SETUP for NEXT monster */
     
     MonsterType *m = new MonsterType();
     
-    line = getNextLine(f);
-    tokens = split(line.c_str());
+    invalid_monster = false;
+    for (int i = 0; i < NUM_KEYWORDS; i++) //REST KEYWORDS MEMORY
+      keywords[i] = false;
     
-    string keyword = tokens.front();
-    tokens.pop_front(); //remove the front
+    tokens = split(line.c_str()); //split into a STRING vector
     
-    /* single MONSTER READ IN */
-    while (keyword.compare("END") != 0) {
+    string keyword = tokens.front(); tokens.pop_front();
+    
+    /* MONSTER READ IN */
+    while (keyword.compare("END") != 0 && invalid_monster != true) {
       
       if (keyword.compare("NAME") == 0) {
         
         /* CHECK if KEYWORD already used */
         if ( keywords[NAME] == true ) {
+          cout << "NAME Keyword was already used! Discarding monster.\n\n";
           invalid_monster = true;
           break;
         }
@@ -140,7 +144,8 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
         m->name = tokens.front();
         //pops off front of tokens
         tokens.pop_front();
-        for (auto word : tokens) {
+        for (int i=0; i<tokens.size(); i++) { //auto word : tokens) {
+          string word = tokens[i];
           m->name += ' ' + word;
         }
         
@@ -149,6 +154,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       else if (keyword.compare("SYMB") == 0) {
         
         if ( keywords[SYMB] == true ) {
+          cout << "SYMB Keyword was already used! Discarding monster.\n\n";
           invalid_monster = true;
           break;
         }
@@ -159,7 +165,8 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
         //line = getNextLine(f);
         if (tokens.size() != 1) {
           cout << "symbol is wrong size!\n";
-          return 1;
+          invalid_monster = true;
+          break;
         }
         m->symbol = tokens.front()[0];
         
@@ -167,6 +174,16 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       }
       else if (keyword.compare("COLOR") == 0){
         //cout << "Colors";
+        
+        /* CHECK if KEYWORD already used */
+        if ( keywords[COLOR] == true ) {
+          cout << "COLOR Keyword was already used! Discarding monster.\n\n";
+          invalid_monster = true;
+          break;
+        }
+        else {
+          keywords[COLOR] = true;
+        }
         
         for (int i=0; i < tokens.size(); i++) {
           string color = tokens[i];
@@ -179,19 +196,34 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
           else if (color.compare("CYAN")   == 0){ m->color[CYAN]    = true; }
           else if (color.compare("WHITE")  == 0){ m->color[WHITE]   = true; }
           else {
-            cout << "Invalid Color = " << color << "\n";
-            return 1;
+            cout << "Invalid Color = " << color <<  " , Discarding monster.\n\n";
+            invalid_monster = true;
+            break;
+
           }
           //cout << " ~ " << color << "\n";
         }
       }
       else if (keyword.compare("DESC") == 0) {
+        
+        /* CHECK if KEYWORD already used */
+        if ( keywords[DESC] == true ) {
+          cout << "DESC Keyword was already used! Discarding monster.\n\n";
+          invalid_monster = true;
+          break;
+        }
+        else {
+          keywords[DESC] = true;
+        }
+        
         line = getNextLine(f);
         //cout << "Description:\n";
         while (line.compare(".") != 0) {
           if (line.size() > 77) {
-            cout << "line size greater than 77\n";
-            return 1;
+            cout << "Description line longer than 77. Discarding monster.\n\n";
+            invalid_monster = true;
+            break;
+
           }
           //cout << line << "\n";
           m->description += line + "\n";
@@ -200,9 +232,21 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       }
       else if (keyword.compare("SPEED") == 0) {
         
+        /* CHECK if KEYWORD already used */
+        if ( keywords[SPEED] == true ) {
+          cout << "SPEED Keyword was already used! Discarding monster.\n\n";
+          invalid_monster = true;
+          break;
+        }
+        else {
+          keywords[SPEED] = true;
+        }
+        
         if (tokens.size() != 1) {
-          cout << "speed is wrong size!\n";
-          return 1;
+          cout << "Speed has too many arguments! Discarding monster.\n\n";
+          invalid_monster = true;
+          break;
+
         }
         
         //cout << "Speed  ";
@@ -212,10 +256,20 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       }
       else if (keyword.compare("DAM") == 0) {
         
-        if (tokens.size() != 1) {
-          cout << "damage is wrong size!\n";
+        /* CHECK if KEYWORD already used */
+        if ( keywords[DAM] == true ) {
+          cout << "DAM Keyword was already used! Discarding monster.\n\n";
           invalid_monster = true;
-          break; //go to next monster
+          break;
+        }
+        else {
+          keywords[DAM] = true;
+        }
+        
+        if (tokens.size() != 1) {
+          cout << "Damage has too many arguments! Discarding monster.\n\n";
+          invalid_monster = true;
+          break;
         }
         
         //cout << "Damage ";
@@ -225,9 +279,21 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       }
       else if (keyword.compare("HP") == 0) {
         
+        /* CHECK if KEYWORD already used */
+        if ( keywords[HP] == true ) {
+          cout << "HP Keyword was already used! Discarding monster.\n\n";
+          invalid_monster = true;
+          break;
+        }
+        else {
+          keywords[HP] = true;
+        }
+        
         if (tokens.size() != 1) {
-          cout << "hitpoints is wrong size!\n";
-          return 1;
+          cout << "Hitpoints has too many arguments! Discarding monster.\n\n";
+          invalid_monster = true;
+          break;
+
         }
         
         //cout << "Health ";
@@ -237,24 +303,39 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       }
       else if (keyword.compare("ABIL") == 0){
         
+        /* CHECK if KEYWORD already used */
+        if ( keywords[ABIL] == true ) {
+          cout << "ABIL Keyword was already used! Discarding monster.\n\n";
+          invalid_monster = true;
+          break;
+        }
+        else {
+          keywords[ABIL] = true;
+        }
+        
         //cout << "Abilities";
-        for ( auto skill : tokens) {
+        for (int i=0; i<tokens.size(); i++) { //auto skill : tokens) {
+          string skill = tokens[i];
           if      (skill.compare("SMART")  == 0){ m->skillz[SMART]  = true;}
           else if (skill.compare("TELE")   == 0){ m->skillz[TELE]   = true;}
           else if (skill.compare("TUNNEL") == 0){ m->skillz[TUNNEL] = true;}
           else if (skill.compare("ERRATIC")== 0){ m->skillz[ERRATIC]= true;}
           else if (skill.compare("PASS")   == 0){ m->skillz[PASS]   = true;}
           else {
-            cout << "Bad ability name = " << skill << "\n";
-            return 1;
+            cout << "Invalid Ability = " << skill << ". Discarding monster.\n\n";
+            invalid_monster = true;
+            break;
+
           }
           //cout << " ~ " << skill;
         }
         //cout << "\n";
       }
       else {
-        cout << "bad keyword! = " << keyword << "\n" ;
-        return 1;
+        cout << "Invalid Keyword! = " << keyword << "\n";
+        cout << "  Discarding Monster Type.\n" ;
+        invalid_monster = true;
+        break;
       } // END of keyword read block
       
       /* get next line */
@@ -265,23 +346,36 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       
       
     } // END of single MONSTER read in
+    //cout << "END SINGLE MONSTER!\n";
     
     /* KEYWORDS CHECK */
-    for (int i = 0; i < NUM_KEYWORDS; i++) {
-      if (keywords[i] == false) invalid_monster = true;
+    if (!invalid_monster) {
+      for (int i = 0; i < NUM_KEYWORDS; i++) {
+        if (keywords[i] == false) {
+          invalid_monster = true;
+          cout << "A Keyword was missing! Discarding Monster Type.\n";
+          break;
+        }
+      }
     }
     
     /* INVALID - throw away data and lines */
     if (invalid_monster) {
-      while (line.size() > 0) //eat lines until next emptyline
+     
+     //eat lines until next emptyline
+      while (line.size() > 0) {
         line = getNextLine(f);
-      break;
+      }
+    }
+    else {
+      this->monsterList.push_back(*m);
+      line = getNextLine(f);
     }
     
-    this->monsterList.push_back(*m);
-    line = getNextLine(f);
   
-  } // END of FILE READ IN
+  
+  } // END of FILE READ IN, WHILE
+  //cout << "END FILE!\n";
 
   return 0;
 }

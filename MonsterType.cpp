@@ -44,6 +44,7 @@ void printColors(bool c[NUM_COLORS]) {
 void MonsterType::printMonsterType() {
   
   //cout << "MonsterType\n";
+  //cout << "\n";
   cout << name << "\n";
   cout << description;
   cout << symbol << "\n";
