@@ -91,6 +91,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
   
   line = getNextLine(f);
   
+  /* FILE READ IN */
   /* go through each line of the file and parse */
   while(!f.eof()) {
     //cout << "Read in: " << line << "\n";
@@ -166,7 +167,9 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
       }
       else if (keyword.compare("COLOR") == 0){
         //cout << "Colors";
-        for ( auto color : tokens) {
+        
+        for (int i=0; i < tokens.size(); i++) {
+          string color = tokens[i];
           if      (color.compare("BLACK")  == 0){ m->color[BLACK]   = true; }
           else if (color.compare("RED")    == 0){ m->color[RED]     = true; }
           else if (color.compare("GREEN")  == 0){ m->color[GREEN]   = true; }
@@ -176,7 +179,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
           else if (color.compare("CYAN")   == 0){ m->color[CYAN]    = true; }
           else if (color.compare("WHITE")  == 0){ m->color[WHITE]   = true; }
           else {
-            cout << "Invalid color = " << color << "\n";
+            cout << "Invalid Color = " << color << "\n";
             return 1;
           }
           //cout << " ~ " << color << "\n";
@@ -211,7 +214,8 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
         
         if (tokens.size() != 1) {
           cout << "damage is wrong size!\n";
-          return 1;
+          invalid_monster = true;
+          break; //go to next monster
         }
         
         //cout << "Damage ";
@@ -277,7 +281,7 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
     this->monsterList.push_back(*m);
     line = getNextLine(f);
   
-  }
+  } // END of FILE READ IN
 
   return 0;
 }

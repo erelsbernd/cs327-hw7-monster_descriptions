@@ -26,6 +26,7 @@ using namespace std;
                   //pass through matter without damaging it,
 #define NUM_SKILLZ 5
 
+
 #define BLACK	  0
 #define RED	    1
 #define GREEN	  2
@@ -46,7 +47,6 @@ using namespace std;
  #define COLOR_CYAN     6
  #define COLOR_WHITE    7
  */
-
 
 struct dice {
   uint32_t base_value;
