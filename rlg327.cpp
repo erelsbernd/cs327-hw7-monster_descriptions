@@ -77,8 +77,6 @@ void usage(char *name)
 /* for testing */
 int main(int argc, char *argv[])
 {
-  std::cout << "baaaaaa\n";
-  
   //char filename[] = "monster_desc.txt";
   ///Users/erelsbernd/Documents/IowaState/IowaStateFall2016/cs327/hw7-monster_descriptions
   
@@ -86,7 +84,7 @@ int main(int argc, char *argv[])
   //char *save_file = NULL;
   char filename[] = "/Users/erelsbernd/Documents/IowaState/IowaStateFall2016/cs327/hw7-monster_descriptions/monster_desc.txt";
   
-  cout << "main filename = " << filename << "\n";
+  cout << "file=" << filename << "\n";
   
   MonsterFactory factory;
   int factoryReturn = factory.readInMonsterDescriptionsFile(filename);

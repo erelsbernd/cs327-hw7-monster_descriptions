@@ -1,13 +1,12 @@
+#define NOMINMAX
 #include "MonsterFactory.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
 #include <stdint.h>
-#include <sys/stat.h>
-#include <limits.h>
-#include <errno.h>
 
+#include <ncurses.h>
 
 
 #define SAVE_DIR                ".rlg327"
@@ -22,7 +21,6 @@ void try_f_read(char* file) {
   FILE *f;
   char *home=NULL, *filename=NULL;
   size_t len;
-  struct stat buf;
   
   if (!file) {
     if (!(home = getenv("HOME"))) {
@@ -45,18 +43,10 @@ void try_f_read(char* file) {
       exit(-1);
     }
     
-    if (stat(filename, &buf)) {
-      perror(filename);
-      exit(-1);
-    }
     
     free(filename);
   } else {
     if (!(f = fopen(file, "r"))) {
-      perror(file);
-      exit(-1);
-    }
-    if (stat(file, &buf)) {
       perror(file);
       exit(-1);
     }
@@ -69,7 +59,24 @@ void try_f_read(char* file) {
     exit(-1);
   }
 }
+
+vector<string> split(const char *str, char c = ' ')
+{
+  vector<string> result;
   
+  do
+  {
+    const char *begin = str;
+    
+    while(*str != c && *str)
+      str++;
+    
+    result.push_back(string(begin, str));
+  } while (0 != *str++);
+  
+  return result;
+}
+
 int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
   //try_f_read(filepath);
   cout << "-- START FILE READ --\n";
@@ -112,22 +119,62 @@ int MonsterFactory::readInMonsterDescriptionsFile(char* filepath) {
           
           /* NAME keyword */
           if (word.compare("NAME") == 0) {
-            line = getNextLine(f); cout << line << "\n";
+            line = getNextLine(f);
             m->name = line;
             
-            cout << "name= " << m->name << "\n";
+            cout << "name = " << m->name << "\n";
           }
           /* SYMB keyword */
           else if (word.compare("SYMB") == 0) {
-            line = getNextLine(f); cout << line << "\n";
+            line = getNextLine(f);
             if (line.size() != 1) {
-              cout << "SYMBOL is wrong size!\n";
+              cout << "symbol is wrong size!\n";
               return 1;
             }
             m->symbol = line[0];
             
-            cout << "symbol= " << m->symbol << "\n";
-          } else {
+            cout << "symbol = " << m->symbol << "\n";
+          } else if (word.compare("COLOR") == 0){
+            
+            line = getNextLine(f);
+            
+            cout << "all colors = " << line << "\n";
+            
+            vector<string> colors = split(line.c_str(), ' ');
+            
+            for ( auto color : colors) {
+              if (color.compare("BLACK") == 0) {
+                m->color = COLOR_BLACK;
+              }
+              else if (color.compare("RED") == 0) {
+                m->color = COLOR_RED;
+              }
+              else if (color.compare("GREEN") == 0) {
+                m->color = COLOR_GREEN;
+              }
+              else if (color.compare("YELLOW") == 0) {
+                m->color = COLOR_YELLOW;
+              }
+              else if (color.compare("BLUE") == 0) {
+                m->color = COLOR_BLUE;
+              }
+              else if (color.compare("MAGENTA") == 0) {
+                m->color = COLOR_MAGENTA;
+              }
+              else if (color.compare("CYAN") == 0) {
+                m->color = COLOR_CYAN;
+              }
+              else if (color.compare("WHITE") == 0) {
+                m->color = COLOR_WHITE;
+              }
+              else {
+                cout << "Bad color = " << color << "\n";
+                return 1;
+              }
+              //cout << "color += " << color << "\n";
+            }
+          
+          }else {
             cout << "bad keyword!\n";
             return 1;
           }
